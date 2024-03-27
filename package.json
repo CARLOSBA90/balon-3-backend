@@ -21,6 +21,7 @@
     "sequelize": "^6.37.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "nodemon": "^3.1.0",
     "typescript": "^5.4.2"

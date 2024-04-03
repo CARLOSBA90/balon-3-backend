@@ -1,21 +1,27 @@
 import {Request, Response} from 'express';
-import bcrypt from 'bcrypt';
 import { User } from '../models/user.model';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
+dotenv.config(); // Load environment variables
 
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
 export const newUser = async (req:Request, res: Response ) => {
 
+    validateInputParameters(req,res);
+
     const { username, password } = req.body;
-    const user = await User.findOne({where: {username:username}})
 
+    const userExist = await checkIfUserExist(username);
 
-    if(user){
-        const errorMsg = 'Ya existe el usuario '+username;
-        return  res.status(400).json({
-            msg: errorMsg
-        })
-    }
-
+    if(userExist)
+      return  errorMsg(res,'Ya existe el usuario '+username);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -26,29 +32,113 @@ export const newUser = async (req:Request, res: Response ) => {
         })
         
         const message = 'Usuario '+username+' creado exitosamente!';
-    
+
         res.json({
             msg: message
         });
 
     } catch (error:any) {
-     
-        const errorMsg = 'Error al crear nuevo usuario: '+error.message;
+        errorMsg(res,'Error al crear nuevo usuario: '+error.message);
+    }
+}
 
-        res.status(400).json({
-            msg: errorMsg
-        })
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export const login = async (req:Request, res: Response ) => {
+
+    validateInputParameters(req,res);
+
+    const { username, password } = req.body;
+
+    const userExist = await checkIfUserExist(username);
+
+    // Validate if exist user exists
+    if(!userExist)
+      return errorMsg(res,'No existe el usuario '+username);
+
+
+    // validate if password is equal
+    const passwordValid = await checkPasswordValid(req,res);
+
+    if(!passwordValid)
+       return errorMsg(res,'Password incorrecto!');
+
+
+    // Generate Token
+    const token = jwt.sign({ username:username}, 
+    process.env.SECRET_KEY||'.SECRET.KEY.313.'
+    );
+
+    res.json({
+        token
+    });
+
+  
+}
+
+/**
+ * Validate Inputs before flows sequences
+ * @param req 
+ * @param res 
+ */
+const validateInputParameters =  (req:Request, res: Response ) => {
+    const { username, password } = req.body;
+
+    if(!username) 
+       errorMsg(res,'Debe insegrar username.');
+
+
+    if(!password)
+       errorMsg(res,'Debe insegrar password.');
+
+}
+
+/**
+ * Check if exists user in Table USER
+ * @param username 
+ * @returns 
+ */
+const checkIfUserExist =  async (username:string) => {
+    try {
+        const user = await User.count({where: {username:username}});
+        return user? true:false;  
+    } catch (error) {
+         return false; // T0D0 handle
     }
 }
 
 
-export const login = (req:Request, res: Response ) => {
+/**
+ * Function to give back response with STATUS 404 with error message
+ * @param res 
+ * @param errorMsg 
+ * @returns 
+ */
+const errorMsg =  (res: Response, errorMsg:string) => {
+    return  res.status(400).json({
+        msg: errorMsg
+    })
+}
 
-    const body  = req.body;
 
-    res.json({
-        msg: 'Login User',
-        body
-    });
+const checkPasswordValid = async (req:Request, res: Response ) => {
 
+    const { username, password } = req.body;
+
+    try {
+        const user:any = await User.findOne({where: {username:username}});
+
+        if(user){
+                const passwordValidate = await bcrypt.compare(password,user.password);
+                return passwordValidate;
+        }else{
+            errorMsg(res,'Error al validar usuario');
+        }
+    } catch (error:any) {
+        errorMsg(res,'Error al validar usuario : <br>'+error.message);
+    } 
 }

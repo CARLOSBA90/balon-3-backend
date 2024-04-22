@@ -1,4 +1,5 @@
 import express, {Application} from 'express';
+import cors from 'cors';
 import routesCard from '../routes/card.router';
 import routesUser from '../routes/user.router';
 import { Card } from './card.model';
@@ -30,7 +31,11 @@ class Server {
     }
 
     middlewares(){
+        // Parese body
      this.app.use(express.json());
+
+        // CORS
+     this.app.use(cors());
     }
 
     async dbConnect(){

@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const card_router_1 = __importDefault(require("../routes/card.router"));
 const user_router_1 = __importDefault(require("../routes/user.router"));
 const card_model_1 = require("./card.model");
@@ -35,7 +36,10 @@ class Server {
         this.app.use('/api/v1/users', user_router_1.default);
     }
     middlewares() {
+        // Parese body
         this.app.use(express_1.default.json());
+        // CORS
+        this.app.use((0, cors_1.default)());
     }
     dbConnect() {
         return __awaiter(this, void 0, void 0, function* () {

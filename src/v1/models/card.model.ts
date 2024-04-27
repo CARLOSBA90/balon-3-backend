@@ -12,5 +12,20 @@ export const Card = sequelize.define('card',{
      },
      description:{
         type: DataTypes.STRING(2000)
+     },
+     views:{
+        type: DataTypes.BIGINT
+     },
+     active:{
+        type: DataTypes.BOOLEAN
+     },
+     category:{
+        type: DataTypes.TINYINT
+     },
+     dateCreated:{
+        type: DataTypes.DATE
+     },
+     dateModified:{
+        type: DataTypes.DATE
      }
 });

@@ -17,5 +17,20 @@ exports.Card = connection_1.default.define('card', {
     },
     description: {
         type: sequelize_1.DataTypes.STRING(2000)
+    },
+    views: {
+        type: sequelize_1.DataTypes.BIGINT
+    },
+    active: {
+        type: sequelize_1.DataTypes.BOOLEAN
+    },
+    category: {
+        type: sequelize_1.DataTypes.TINYINT
+    },
+    dateCreated: {
+        type: sequelize_1.DataTypes.DATE
+    },
+    dateModified: {
+        type: sequelize_1.DataTypes.DATE
     }
 });

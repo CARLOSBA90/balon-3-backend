@@ -12,6 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCards = void 0;
 const card_model_1 = require("../models/card.model");
 const getCards = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    /// Si cant== 0 y env = demo
+    // Usar json 
+    /*if(){
+  
+    }*/
     const listCards = yield card_model_1.Card.findAll();
     res.json(listCards);
 });

@@ -4,6 +4,8 @@ import routesCard from '../routes/card.router';
 import routesUser from '../routes/user.router';
 import { Card } from './card.model';
 import { User } from './user.model';
+import { Timezone } from './timezone.model';
+import { getTimeZones } from '../controllers/timezone.controller';
 
 
 class Server {
@@ -17,6 +19,8 @@ class Server {
        this.middlewares();
        this.routes();
        this.dbConnect();
+       this.startServer();
+        
     }
 
     listen(){
@@ -42,11 +46,16 @@ class Server {
         try {
             await Card.sync();
             await User.sync();
+            await Timezone.sync();
         } catch (error:any) {
             console.error("Unable to connect to database: "+error.message);
             
         }
 
+    }
+
+    startServer(){
+      getTimeZones();
     }
 }
 

@@ -78,9 +78,9 @@ exports.login = login;
 const validateInputParameters = (req, res) => {
     const { username, password } = req.body;
     if (!username)
-        errorMsg(res, 'Debe insegrar username.');
+        errorMsg(res, 'Debe ingresar username.');
     if (!password)
-        errorMsg(res, 'Debe insegrar password.');
+        errorMsg(res, 'Debe ingresar password.');
 };
 /**
  * Check if exists user in Table USER

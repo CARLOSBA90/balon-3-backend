@@ -18,6 +18,8 @@ const card_router_1 = __importDefault(require("../routes/card.router"));
 const user_router_1 = __importDefault(require("../routes/user.router"));
 const card_model_1 = require("./card.model");
 const user_model_1 = require("./user.model");
+const timezone_model_1 = require("./timezone.model");
+const timezone_controller_1 = require("../controllers/timezone.controller");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -25,6 +27,7 @@ class Server {
         this.middlewares();
         this.routes();
         this.dbConnect();
+        this.startServer();
     }
     listen() {
         this.app.listen(this.port, () => {
@@ -46,11 +49,15 @@ class Server {
             try {
                 yield card_model_1.Card.sync();
                 yield user_model_1.User.sync();
+                yield timezone_model_1.Timezone.sync();
             }
             catch (error) {
                 console.error("Unable to connect to database: " + error.message);
             }
         });
+    }
+    startServer() {
+        (0, timezone_controller_1.getTimeZones)();
     }
 }
 exports.default = Server;

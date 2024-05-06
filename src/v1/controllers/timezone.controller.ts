@@ -7,7 +7,7 @@ import path from 'path';
 export const getTimeZones = async () => {
 
   checkQuantityData();
-  const listTimeZones = await Timezone.findAll();
+  //const listTimeZones = await Timezone.findAll();
 
 }
 
@@ -28,17 +28,14 @@ const fillFromJson= async () => {
     try {
       const jsonData = await fs.promises.readFile(filePath, 'utf8');
       const data: string[] = JSON.parse(jsonData);
-      console.log(data);
-
+      
       data.forEach( async (timezone) => {
-          console.log(timezone);
           try {
              await Timezone.create({
               description: timezone
-             })
-             console.log(`Registro ${timezone} insertado en base de datos!`)
+             });
           } catch (error:any) {
-            console.log("Error al insertar Timezone", error.messsage);
+            console.error("Error al insertar Timezone", error.messsage);
           }
       });
     } catch (error) {

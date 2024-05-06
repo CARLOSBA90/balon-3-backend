@@ -6,6 +6,9 @@ import { Card } from './card.model';
 import { User } from './user.model';
 import { Timezone } from './timezone.model';
 import { getTimeZones } from '../controllers/timezone.controller';
+import { Team } from './team.model';
+import { Venue } from './venue.model';
+import { getTeams } from '../controllers/team.controller';
 
 
 class Server {
@@ -47,6 +50,8 @@ class Server {
             await Card.sync();
             await User.sync();
             await Timezone.sync();
+            await Team.sync();
+            await Venue.sync();
         } catch (error:any) {
             console.error("Unable to connect to database: "+error.message);
             
@@ -55,7 +60,8 @@ class Server {
     }
 
     startServer(){
-      getTimeZones();
+      //getTimeZones();
+      //getTeams();
     }
 }
 

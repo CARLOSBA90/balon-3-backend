@@ -19,7 +19,9 @@ const user_router_1 = __importDefault(require("../routes/user.router"));
 const card_model_1 = require("./card.model");
 const user_model_1 = require("./user.model");
 const timezone_model_1 = require("./timezone.model");
-const timezone_controller_1 = require("../controllers/timezone.controller");
+const team_model_1 = require("./team.model");
+const venue_model_1 = require("./venue.model");
+const team_controller_1 = require("../controllers/team.controller");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -50,6 +52,8 @@ class Server {
                 yield card_model_1.Card.sync();
                 yield user_model_1.User.sync();
                 yield timezone_model_1.Timezone.sync();
+                yield team_model_1.Team.sync();
+                yield venue_model_1.Venue.sync();
             }
             catch (error) {
                 console.error("Unable to connect to database: " + error.message);
@@ -57,7 +61,8 @@ class Server {
         });
     }
     startServer() {
-        (0, timezone_controller_1.getTimeZones)();
+        //getTimeZones();
+        (0, team_controller_1.getTeams)();
     }
 }
 exports.default = Server;

@@ -16,19 +16,13 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const card_router_1 = __importDefault(require("../routes/card.router"));
 const user_router_1 = __importDefault(require("../routes/user.router"));
-const card_model_1 = require("./card.model");
-const user_model_1 = require("./user.model");
-const timezone_model_1 = require("./timezone.model");
-const team_model_1 = require("./team.model");
-const venue_model_1 = require("./venue.model");
-const team_controller_1 = require("../controllers/team.controller");
+const server_controller_1 = require("../controllers/server.controller");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '3000';
         this.middlewares();
         this.routes();
-        this.dbConnect();
         this.startServer();
     }
     listen() {
@@ -41,28 +35,20 @@ class Server {
         this.app.use('/api/v1/users', user_router_1.default);
     }
     middlewares() {
-        // Parese body
+        // PARSING BODY
         this.app.use(express_1.default.json());
         // CORS
         this.app.use((0, cors_1.default)());
     }
-    dbConnect() {
+    startServer() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield card_model_1.Card.sync();
-                yield user_model_1.User.sync();
-                yield timezone_model_1.Timezone.sync();
-                yield team_model_1.Team.sync();
-                yield venue_model_1.Venue.sync();
+                yield (0, server_controller_1.checkServerStatus)();
             }
             catch (error) {
                 console.error("Unable to connect to database: " + error.message);
             }
         });
-    }
-    startServer() {
-        //getTimeZones();
-        (0, team_controller_1.getTeams)();
     }
 }
 exports.default = Server;

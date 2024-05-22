@@ -2,13 +2,8 @@ import express, {Application} from 'express';
 import cors from 'cors';
 import routesCard from '../routes/card.router';
 import routesUser from '../routes/user.router';
-import { Card } from './card.model';
-import { User } from './user.model';
-import { Timezone } from './timezone.model';
-import { getTimeZones } from '../controllers/timezone.controller';
-import { Team } from './team.model';
-import { Venue } from './venue.model';
-import { getTeams } from '../controllers/team.controller';
+
+import { checkServerStatus } from '../controllers/server.controller';
 
 
 class Server {
@@ -21,7 +16,6 @@ class Server {
        this.port= process.env.PORT || '3000';
        this.middlewares();
        this.routes();
-       this.dbConnect();
        this.startServer();
         
     }
@@ -38,30 +32,21 @@ class Server {
     }
 
     middlewares(){
-        // Parese body
+        // PARSING BODY
      this.app.use(express.json());
 
         // CORS
      this.app.use(cors());
     }
 
-    async dbConnect(){
+
+    async startServer(){
         try {
-            await Card.sync();
-            await User.sync();
-            await Timezone.sync();
-            await Team.sync();
-            await Venue.sync();
+            await checkServerStatus();
+        
         } catch (error:any) {
             console.error("Unable to connect to database: "+error.message);
-            
         }
-
-    }
-
-    startServer(){
-      //getTimeZones();
-      //getTeams();
     }
 }
 

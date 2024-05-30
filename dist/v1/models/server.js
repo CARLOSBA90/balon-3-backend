@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const card_router_1 = __importDefault(require("../routes/card.router"));
 const user_router_1 = __importDefault(require("../routes/user.router"));
+const fixture_router_1 = __importDefault(require("../routes/fixture.router"));
 const server_controller_1 = require("../controllers/server.controller");
 class Server {
     constructor() {
@@ -33,6 +34,7 @@ class Server {
     routes() {
         this.app.use('/api/v1/cards', card_router_1.default);
         this.app.use('/api/v1/users', user_router_1.default);
+        this.app.use('/api/v1/fixtures', fixture_router_1.default);
     }
     middlewares() {
         // PARSING BODY

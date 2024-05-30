@@ -41,7 +41,7 @@ const fs = __importStar(require("fs"));
 const path_1 = __importDefault(require("path"));
 const getTimeZones = () => __awaiter(void 0, void 0, void 0, function* () {
     checkQuantityData();
-    //const listTimeZones = await Timezone.findAll();
+    const listTimeZones = yield timezone_model_1.Timezone.findAll();
 });
 exports.getTimeZones = getTimeZones;
 const checkQuantityData = () => __awaiter(void 0, void 0, void 0, function* () {

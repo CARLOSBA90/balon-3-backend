@@ -51,7 +51,6 @@ const getTeams = () => __awaiter(void 0, void 0, void 0, function* () {
             }
         ]
     });
-    console.log(teams);
 });
 exports.getTeams = getTeams;
 const checkQuantityData = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -62,7 +61,7 @@ const checkQuantityData = () => __awaiter(void 0, void 0, void 0, function* () {
         fillFromAPI();
 });
 const fillFromJson = () => __awaiter(void 0, void 0, void 0, function* () {
-    const filePath = path_1.default.resolve(__dirname, '../mocks/teams.json'); // Ruta completa al archivo timezone.json
+    const filePath = path_1.default.resolve(__dirname, '../mocks/teams.json');
     try {
         const jsonData = yield fs.promises.readFile(filePath, 'utf8');
         const data = JSON.parse(jsonData);
@@ -78,7 +77,6 @@ const fillFromJson = () => __awaiter(void 0, void 0, void 0, function* () {
                         return insertVenue(venue);
                     }
                 })
-                    .then(() => { })
                     .catch(error => {
                     console.error("Error al insertar equipo o sede:", error.message);
                 });

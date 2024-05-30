@@ -1,4 +1,3 @@
-import {Request, Response} from 'express';
 import * as fs from 'fs';
 import path from 'path'; 
 import { Team } from '../models/team.model';
@@ -20,7 +19,6 @@ export const getTeams = async () => {
     ]
   });
   
-  console.log(teams); 
 }
 
 
@@ -36,7 +34,7 @@ const checkQuantityData = async () => {
 
 
 const fillFromJson= async () => {
-    const filePath = path.resolve(__dirname, '../mocks/teams.json'); // Ruta completa al archivo timezone.json
+    const filePath = path.resolve(__dirname, '../mocks/teams.json');
     try {
       const jsonData = await fs.promises.readFile(filePath, 'utf8');
       const data: any = JSON.parse(jsonData); 
@@ -56,7 +54,6 @@ const fillFromJson= async () => {
                         return  insertVenue(venue);
                     }
                 })
-                .then(() => {})
                 .catch(error => {
                     console.error("Error al insertar equipo o sede:", error.message);
                 });

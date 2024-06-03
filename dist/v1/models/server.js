@@ -17,7 +17,7 @@ const cors_1 = __importDefault(require("cors"));
 const card_router_1 = __importDefault(require("../routes/card.router"));
 const user_router_1 = __importDefault(require("../routes/user.router"));
 const fixture_router_1 = __importDefault(require("../routes/fixture.router"));
-const server_controller_1 = require("../controllers/server.controller");
+const fixture_controller_1 = require("../controllers/fixture.controller");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -45,7 +45,8 @@ class Server {
     startServer() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield (0, server_controller_1.checkServerStatus)();
+                //await checkServerStatus();
+                yield (0, fixture_controller_1.checkQuantityData)();
             }
             catch (error) {
                 console.error("Unable to connect to database: " + error.message);

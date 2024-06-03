@@ -4,6 +4,7 @@ import routesCard from '../routes/card.router';
 import routesUser from '../routes/user.router';
 import routesFixture from '../routes/fixture.router';
 import { checkServerStatus } from '../controllers/server.controller';
+import { checkQuantityData, getFixtures } from '../controllers/fixture.controller';
 
 
 class Server {
@@ -43,7 +44,8 @@ class Server {
 
     async startServer(){
         try {
-            await checkServerStatus();
+            //await checkServerStatus();
+            await checkQuantityData();
         } catch (error:any) {
             console.error("Unable to connect to database: "+error.message);
         }

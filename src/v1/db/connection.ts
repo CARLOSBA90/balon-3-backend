@@ -11,11 +11,20 @@ const sequelize = new Sequelize(
     process.env.DB_NAME|| '',
     process.env.DB_USER|| '',
     process.env.DB_PASSWORD|| '',
-    {
-    host: process.env.DB_HOST || 'localhost',
+    { host: process.env.DB_HOST || 'localhost',
     port: dataBasePort(),
-    dialect:'mysql'
-})
+    dialect:'mysql',
+        dialectOptions: {
+            useUTC: false, 
+            dateStrings: true,
+            typeCast: true 
+        },
+        // config en produccion (server)
+        timezone: '-03:00',
+
+    },
+  
+)
 
 
 

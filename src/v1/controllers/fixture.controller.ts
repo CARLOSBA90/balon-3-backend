@@ -1,12 +1,16 @@
 import {Request, Response} from 'express';
 import * as fs from 'fs';
 import path from 'path'; 
+import moment from 'moment-timezone';
 import { Fixture } from '../models/fixture.model';
 import { FixtureInterface } from '../core/interfaces/fixture.interface';
 import { Team } from '../models/team.model';
 import { Venue } from '../models/venue.model';
 
 export const getFixtures = async (req: Request, res: Response): Promise<void> => {
+
+    checkQuantityData();
+
     try {
         const listFixtures = await Fixture.findAll({
             include: [
@@ -35,7 +39,7 @@ export const getFixtures = async (req: Request, res: Response): Promise<void> =>
 };
 
 
-const checkQuantityData = async () => {
+export const checkQuantityData = async () => {
     const count = await Fixture.count();
 
     if (count === 0 && process.env.MODE === 'DEMO')
@@ -99,7 +103,9 @@ const extractFixtures = async (response:any): Promise<FixtureInterface[]> => {
 
         return {
             external_id: data.fixture.id ?? 0,
-            date: data.fixture.date ?? '',
+            // Convierte la fecha a UTC antes de guardarla(Solo para este caso en especifico)
+            // El JSON viene en formato (UTC-3), casting a UTC 
+            date: moment(data.fixture.date).utc().format('YYYY-MM-DD HH:mm:ss') ?? '',
             homeIdTeam,
             awayIdTeam,
             venueId

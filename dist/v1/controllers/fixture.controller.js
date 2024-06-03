@@ -35,13 +35,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFixtures = void 0;
+exports.checkQuantityData = exports.getFixtures = void 0;
 const fs = __importStar(require("fs"));
 const path_1 = __importDefault(require("path"));
+const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const fixture_model_1 = require("../models/fixture.model");
 const team_model_1 = require("../models/team.model");
 const venue_model_1 = require("../models/venue.model");
 const getFixtures = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    (0, exports.checkQuantityData)();
     try {
         const listFixtures = yield fixture_model_1.Fixture.findAll({
             include: [
@@ -76,6 +78,7 @@ const checkQuantityData = () => __awaiter(void 0, void 0, void 0, function* () {
     if (count === 0 && process.env.MODE === 'PRODUCTION')
         fillFromAPI();
 });
+exports.checkQuantityData = checkQuantityData;
 const fillFromJson = () => __awaiter(void 0, void 0, void 0, function* () {
     const filePath = path_1.default.resolve(__dirname, '../mocks/fixture.json');
     try {
@@ -114,7 +117,9 @@ const extractFixtures = (response) => __awaiter(void 0, void 0, void 0, function
         const venueId = (_c = venueMap.get(data.fixture.venue.id)) !== null && _c !== void 0 ? _c : 0;
         return {
             external_id: (_d = data.fixture.id) !== null && _d !== void 0 ? _d : 0,
-            date: (_e = data.fixture.date) !== null && _e !== void 0 ? _e : '',
+            // Convierte la fecha a UTC antes de guardarla(Solo para este caso en especifico)
+            // El JSON viene en formato (UTC-3), casting a UTC 
+            date: (_e = (0, moment_timezone_1.default)(data.fixture.date).utc().format('YYYY-MM-DD HH:mm:ss')) !== null && _e !== void 0 ? _e : '',
             homeIdTeam,
             awayIdTeam,
             venueId

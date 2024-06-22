@@ -36,4 +36,15 @@ exports.Team = connection_1.default.define('team', {
     logo: {
         type: sequelize_1.DataTypes.STRING(150)
     }
+}, {
+    indexes: [
+        {
+            unique: true,
+            fields: ['external_id'],
+        },
+        {
+            unique: true,
+            fields: ['name'],
+        },
+    ],
 });

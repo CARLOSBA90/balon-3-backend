@@ -31,6 +31,18 @@ export const Team = sequelize.define('team',{
      logo:{
         type: DataTypes.STRING(150)
      }
-
-});
+},
+{
+   indexes: [
+     {
+       unique: true,
+       fields: ['external_id'],
+     },
+     {
+       unique: true,
+       fields: ['name'],
+     },
+   ],
+ }
+);
  

@@ -12,4 +12,13 @@ export const Timezone = sequelize.define('timezone',{
         unique:true,
         allowNull:false
      },
-});
+},
+{
+   indexes: [
+     {
+       unique: true,
+       fields: ['description'],
+     },
+   ],
+ }
+);

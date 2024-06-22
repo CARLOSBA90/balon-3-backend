@@ -1,16 +1,15 @@
 import { Timezone } from '../models/timezone.model';
-
 import * as fs from 'fs';
 import path from 'path'; 
 
 export const getTimeZones = async () => {
 
-  checkQuantityData();
   const listTimeZones = await Timezone.findAll();
-}
+
+} 
 
 
-const checkQuantityData = async () => {
+export const checkTimezonesData = async () => {
     const count = await Timezone.count();
 
     if (count === 0 && process.env.MODE === 'DEMO')

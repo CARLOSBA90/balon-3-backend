@@ -42,6 +42,22 @@ exports.Fixture = connection_1.default.define('fixture', {
             key: 'id'
         }
     }
+}, {
+    indexes: [
+        {
+            unique: true,
+            fields: ['external_id'],
+        },
+        {
+            fields: ['homeIdTeam'],
+        },
+        {
+            fields: ['awayIdTeam'],
+        },
+        {
+            fields: ['venueId'],
+        },
+    ],
 });
 team_model_1.Team.hasMany(exports.Fixture, { as: 'HomeFixtures', foreignKey: 'homeIdTeam' });
 team_model_1.Team.hasMany(exports.Fixture, { as: 'AwayFixtures', foreignKey: 'awayIdTeam' });

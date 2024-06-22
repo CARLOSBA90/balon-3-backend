@@ -2,9 +2,7 @@ import express, {Application} from 'express';
 import cors from 'cors';
 import routesCard from '../routes/card.router';
 import routesUser from '../routes/user.router';
-import routesFixture from '../routes/fixture.router';
-import { checkServerStatus } from '../controllers/server.controller';
-import { checkQuantityData, getFixtures } from '../controllers/fixture.controller';
+import { checkServerStatus } from '../services/server.service';
 
 
 class Server {
@@ -29,8 +27,7 @@ class Server {
 
     routes(){
         this.app.use('/api/v1/cards', routesCard);
-        this.app.use('/api/v1/users', routesUser);
-        this.app.use('/api/v1/fixtures', routesFixture);
+      //  this.app.use('/api/v1/users', routesUser);
     }
 
     middlewares(){
@@ -44,8 +41,7 @@ class Server {
 
     async startServer(){
         try {
-            //await checkServerStatus();
-            await checkQuantityData();
+            await checkServerStatus();
         } catch (error:any) {
             console.error("Unable to connect to database: "+error.message);
         }

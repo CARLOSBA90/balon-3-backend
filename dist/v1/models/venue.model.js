@@ -40,6 +40,17 @@ exports.Venue = connection_1.default.define('venue', {
     teamId: {
         type: sequelize_1.DataTypes.INTEGER,
     }
+}, {
+    indexes: [
+        {
+            unique: true,
+            fields: ['external_id'],
+        },
+        {
+            unique: true,
+            fields: ['name'],
+        },
+    ],
 });
 team_model_1.Team.hasOne(exports.Venue);
 exports.Venue.belongsTo(team_model_1.Team);

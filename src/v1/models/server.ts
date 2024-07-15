@@ -1,7 +1,6 @@
 import express, {Application} from 'express';
 import cors from 'cors';
 import routesCard from '../routes/card.router';
-import routesUser from '../routes/user.router';
 import { checkServerStatus } from '../services/server.service';
 
 

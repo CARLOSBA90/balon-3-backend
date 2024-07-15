@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/connection";
-import { Fixture } from "./fixture.model";
 
 export const Card = sequelize.define('card',{
     id:{
@@ -11,12 +10,9 @@ export const Card = sequelize.define('card',{
      title:{
         type: DataTypes.STRING(100)
      },
-     content:{
-        type: DataTypes.TEXT
+     description:{
+        type: DataTypes.STRING(2000)
      },
-     imageUrl:{
-      type: DataTypes.STRING(255)
-    },
      views:{
         type: DataTypes.BIGINT
      },
@@ -26,22 +22,10 @@ export const Card = sequelize.define('card',{
      category:{
         type: DataTypes.TINYINT
      },
-     fixtureId: {
-      type: DataTypes.INTEGER,
-      references: {
-          model: Fixture,
-          key: 'id'
-      }
-    }
-}, 
-{
-   indexes: [
-     {
-       fields: ['fixtureId'],
+     dateCreated:{
+        type: DataTypes.DATE
      },
-   ],
-}
-); 
-
-Fixture.hasMany(Card, { foreignKey: 'fixtureId' });
-Card.belongsTo(Fixture, { foreignKey: 'fixtureId' });
+     dateModified:{
+        type: DataTypes.DATE
+     }
+});

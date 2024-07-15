@@ -17,11 +17,4 @@ exports.Timezone = connection_1.default.define('timezone', {
         unique: true,
         allowNull: false
     },
-}, {
-    indexes: [
-        {
-            unique: true,
-            fields: ['description'],
-        },
-    ],
 });

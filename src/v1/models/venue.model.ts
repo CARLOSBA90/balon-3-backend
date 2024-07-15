@@ -35,20 +35,7 @@ export const Venue = sequelize.define('venue',{
      teamId:{
       type: DataTypes.INTEGER,
    } 
-},
- {
-   indexes: [
-     {
-       unique: true,
-       fields: ['external_id'],
-     },
-     {
-       unique: true,
-       fields: ['name'],
-     },
-   ],
- }
-);
+});
 
 Team.hasOne(Venue);
 Venue.belongsTo(Team);

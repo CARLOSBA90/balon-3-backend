@@ -4,6 +4,7 @@ import { Team } from "./team.model";
 import { Venue } from "./venue.model";
 
 
+
 export const Fixture = sequelize.define('fixture',{
     id:{
         type: DataTypes.INTEGER,
@@ -38,25 +39,7 @@ export const Fixture = sequelize.define('fixture',{
             key: 'id'
         }
      }
-   },
-   {
-      indexes: [
-        {
-          unique: true,
-          fields: ['external_id'],
-        },
-        {
-          fields: ['homeIdTeam'],
-        },
-        {
-          fields: ['awayIdTeam'],
-        },
-        {
-          fields: ['venueId'],
-        },
-      ],
-    }
-);
+});
 
 Team.hasMany(Fixture, { as: 'HomeFixtures', foreignKey: 'homeIdTeam' });
 Team.hasMany(Fixture, { as: 'AwayFixtures', foreignKey: 'awayIdTeam' });

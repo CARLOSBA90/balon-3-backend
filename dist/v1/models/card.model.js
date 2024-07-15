@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Card = void 0;
 const sequelize_1 = require("sequelize");
 const connection_1 = __importDefault(require("../db/connection"));
-const fixture_model_1 = require("./fixture.model");
 exports.Card = connection_1.default.define('card', {
     id: {
         type: sequelize_1.DataTypes.INTEGER,
@@ -16,11 +15,8 @@ exports.Card = connection_1.default.define('card', {
     title: {
         type: sequelize_1.DataTypes.STRING(100)
     },
-    content: {
-        type: sequelize_1.DataTypes.TEXT
-    },
-    imageUrl: {
-        type: sequelize_1.DataTypes.STRING(255)
+    description: {
+        type: sequelize_1.DataTypes.STRING(2000)
     },
     views: {
         type: sequelize_1.DataTypes.BIGINT
@@ -31,19 +27,10 @@ exports.Card = connection_1.default.define('card', {
     category: {
         type: sequelize_1.DataTypes.TINYINT
     },
-    fixtureId: {
-        type: sequelize_1.DataTypes.INTEGER,
-        references: {
-            model: fixture_model_1.Fixture,
-            key: 'id'
-        }
+    dateCreated: {
+        type: sequelize_1.DataTypes.DATE
+    },
+    dateModified: {
+        type: sequelize_1.DataTypes.DATE
     }
-}, {
-    indexes: [
-        {
-            fields: ['fixtureId'],
-        },
-    ],
 });
-fixture_model_1.Fixture.hasMany(exports.Card, { foreignKey: 'fixtureId' });
-exports.Card.belongsTo(fixture_model_1.Fixture, { foreignKey: 'fixtureId' });

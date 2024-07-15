@@ -13,6 +13,7 @@ const sequelize = new sequelize_1.Sequelize(process.env.DB_NAME || '', process.e
     port: dataBasePort(),
     dialect: 'mysql',
     dialectOptions: {
+        useUTC: false,
         dateStrings: true,
         typeCast: true
     },

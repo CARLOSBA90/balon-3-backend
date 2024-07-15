@@ -15,6 +15,7 @@ const sequelize = new Sequelize(
     port: dataBasePort(),
     dialect:'mysql',
         dialectOptions: {
+            useUTC: false, 
             dateStrings: true,
             typeCast: true 
         },

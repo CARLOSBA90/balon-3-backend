@@ -44,52 +44,25 @@ const team_model_1 = require("../models/team.model");
 const venue_model_1 = require("../models/venue.model");
 const getFixtures = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     (0, exports.checkQuantityData)();
-    const { Op } = require('sequelize');
-    const today = new Date();
-    today.setHours(-3, 0, 0, 0);
-    const count = yield fixture_model_1.Fixture.count({
-    /*
-where: {
-date: {
-    [Op.gte]: '20240610'//today
-}
-},*/
-    });
-    const page = 2;
-    const pageSize = Number(process.env.PAGE_SIZE) || 1;
-    const offset = (page - 1) * pageSize;
-    const limit = pageSize;
     try {
         const listFixtures = yield fixture_model_1.Fixture.findAll({
             include: [
                 {
                     model: team_model_1.Team,
                     as: 'HomeTeam',
-                    attributes: ['id', 'name', 'logo']
+                    attributes: ['id', 'name']
                 },
                 {
                     model: team_model_1.Team,
                     as: 'AwayTeam',
-                    attributes: ['id', 'name', 'logo']
+                    attributes: ['id', 'name']
                 },
                 {
                     model: venue_model_1.Venue,
-                    attributes: ['id', 'name', 'image']
+                    attributes: ['id', 'name']
                 }
-            ],
-            /*
-            where: {
-                date: {
-                    [Op.gte]: '20240610'//today
-                }
-            },*/
-            order: [
-                ['date', 'ASC']
-            ],
-            limit: limit,
-            offset: offset
+            ]
         });
-        console.log(count);
         res.json(listFixtures);
     }
     catch (error) {

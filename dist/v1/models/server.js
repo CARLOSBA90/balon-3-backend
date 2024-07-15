@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const card_router_1 = __importDefault(require("../routes/card.router"));
-const server_service_1 = require("../services/server.service");
+const user_router_1 = __importDefault(require("../routes/user.router"));
+const fixture_router_1 = __importDefault(require("../routes/fixture.router"));
+const fixture_controller_1 = require("../controllers/fixture.controller");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -31,7 +33,8 @@ class Server {
     }
     routes() {
         this.app.use('/api/v1/cards', card_router_1.default);
-        //  this.app.use('/api/v1/users', routesUser);
+        this.app.use('/api/v1/users', user_router_1.default);
+        this.app.use('/api/v1/fixtures', fixture_router_1.default);
     }
     middlewares() {
         // PARSING BODY
@@ -42,7 +45,8 @@ class Server {
     startServer() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield (0, server_service_1.checkServerStatus)();
+                //await checkServerStatus();
+                yield (0, fixture_controller_1.checkQuantityData)();
             }
             catch (error) {
                 console.error("Unable to connect to database: " + error.message);

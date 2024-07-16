@@ -135,8 +135,8 @@ const insertCards = (fixtures) => __awaiter(void 0, void 0, void 0, function* ()
                 const venueName = venue.get('name');
                 const venueCity = venue.get('city');
                 const venueImage = venue.get('image');
-                const title = `${(0, moment_timezone_1.default)(date).format('YYYY-MM-DD')} - ${homeTeamName} vs ${awayTeamName}`;
-                const content = `
+                const title = `${homeTeamName} VS ${awayTeamName}`;
+                const content = ` 
                 <div class="p-4 bg-white rounded shadow-md">
                   <p class="text-lg font-semibold mb-2"><strong>Fecha:</strong> ${(0, moment_timezone_1.default)(date).format('YYYY-MM-DD HH:mm:ss')}</p>
                   <p class="text-lg font-semibold mb-2"><strong>Equipos:</strong> <span class="text-blue-500">${homeTeamName}</span> VS <span class="text-red-500">${awayTeamName}</span></p>
@@ -145,7 +145,7 @@ const insertCards = (fixtures) => __awaiter(void 0, void 0, void 0, function* ()
                     <div class="w-1/3 text-center">
                       <p class="text-lg font-semibold mb-2">Locales</p>
                       <img src="${homeLogo}" alt="${homeTeamName} logo" class="w-24 h-24 mx-auto rounded-full shadow-md">
-                    </div>
+                    </div> 
                     <div class="w-1/3 text-center">
                       <p class="text-lg font-semibold mb-2">Visitantes</p>
                       <img src="${awayLogo}" alt="${awayTeamName} logo" class="w-24 h-24 mx-auto rounded-full shadow-md">
@@ -157,8 +157,9 @@ const insertCards = (fixtures) => __awaiter(void 0, void 0, void 0, function* ()
                   </div>
                 </div>
               `;
-                const imageUrls = [venueImage, homeLogo, awayLogo];
-                const imageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+                //const imageUrls = [venueImage, homeLogo, awayLogo];
+                //const imageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+                const imageUrl = venueImage;
                 yield card_model_1.Card.create({
                     title,
                     content,

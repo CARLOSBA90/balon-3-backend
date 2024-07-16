@@ -8,11 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardService = void 0;
 const sequelize_1 = require("sequelize");
 const card_model_1 = require("../models/card.model");
 const fixture_model_1 = require("../models/fixture.model");
+const moment_1 = __importDefault(require("moment"));
 class CardService {
     static getHomeContent(date, limit, offset) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,7 +35,7 @@ class CardService {
                     ]
                 });
                 // Obtener los registros paginados
-                const cards = yield card_model_1.Card.findAll({
+                const data = yield card_model_1.Card.findAll({
                     attributes: ['id', 'title', 'imageUrl'],
                     include: [
                         {
@@ -44,11 +48,20 @@ class CardService {
                             order: [
                                 ['date', 'ASC']
                             ],
-                            attributes: []
+                            attributes: ['date'],
                         }
                     ],
                     limit: limit,
                     offset: offset
+                });
+                const cards = data.map(card => {
+                    const fixture = card.get('fixture');
+                    const fixtureDate = fixture ? fixture.date : null;
+                    console.log(fixtureDate);
+                    const formattedDate = fixtureDate ? (0, moment_1.default)(fixtureDate).format('DD-MM-YYYY') : null;
+                    console.log(formattedDate);
+                    return Object.assign(Object.assign({}, card.get({ plain: true })), { fixtureDate: formattedDate // Agregar la fecha formateada
+                     });
                 });
                 return { cards, total };
             }

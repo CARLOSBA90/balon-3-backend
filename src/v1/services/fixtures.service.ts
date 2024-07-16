@@ -129,8 +129,8 @@ const insertCards = async (fixtures: FixtureInterface[]): Promise<void> => {
                 const venueCity =  venue.get('city') as String;
                 const venueImage = venue.get('image') as String;
  
-                const title = `${moment(date).format('YYYY-MM-DD')} - ${homeTeamName} vs ${awayTeamName}`;
-                const content = `
+                const title = `${homeTeamName} VS ${awayTeamName}`;
+                const content = ` 
                 <div class="p-4 bg-white rounded shadow-md">
                   <p class="text-lg font-semibold mb-2"><strong>Fecha:</strong> ${moment(date).format('YYYY-MM-DD HH:mm:ss')}</p>
                   <p class="text-lg font-semibold mb-2"><strong>Equipos:</strong> <span class="text-blue-500">${homeTeamName}</span> VS <span class="text-red-500">${awayTeamName}</span></p>
@@ -139,7 +139,7 @@ const insertCards = async (fixtures: FixtureInterface[]): Promise<void> => {
                     <div class="w-1/3 text-center">
                       <p class="text-lg font-semibold mb-2">Locales</p>
                       <img src="${homeLogo}" alt="${homeTeamName} logo" class="w-24 h-24 mx-auto rounded-full shadow-md">
-                    </div>
+                    </div> 
                     <div class="w-1/3 text-center">
                       <p class="text-lg font-semibold mb-2">Visitantes</p>
                       <img src="${awayLogo}" alt="${awayTeamName} logo" class="w-24 h-24 mx-auto rounded-full shadow-md">
@@ -152,8 +152,10 @@ const insertCards = async (fixtures: FixtureInterface[]): Promise<void> => {
                 </div>
               `;
                 
-                const imageUrls = [venueImage, homeLogo, awayLogo];
-                const imageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+                //const imageUrls = [venueImage, homeLogo, awayLogo];
+                //const imageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+ 
+                const imageUrl = venueImage;
 
                 await Card.create({
                 title,

@@ -17,7 +17,7 @@ const getHomeData = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     //today(true),
     try {
         let data = {
-            date: (0, dates_1.parseToDate)('20240610'),
+            date: (0, dates_1.parseToDate)('20240601'),
             limit: Number(process.env.PAGE_SIZE) || 1,
             total: 0,
             pages: 0,

@@ -9,7 +9,7 @@ export const getHomeData = async (req:Request, res: Response ) => {
    //today(true),
       try {
          let data:HomeInterface= {
-            date: parseToDate('20240610'),
+            date: parseToDate('20240601'),
             limit: Number(process.env.PAGE_SIZE) || 1,
             total: 0,
             pages: 0,

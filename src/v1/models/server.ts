@@ -11,7 +11,7 @@ class Server {
     constructor(){
         
        this.app=express();
-       this.port= process.env.PORT || '3000';
+       this.port= process.env.PORT || '4500';
        this.middlewares();
        this.routes();
        this.startServer();
@@ -25,8 +25,7 @@ class Server {
     }
 
     routes(){
-        this.app.use('/api/v1/cards', routesCard);
-      //  this.app.use('/api/v1/users', routesUser);
+        this.app.use('/v1/cards', routesCard);
     }
 
     middlewares(){

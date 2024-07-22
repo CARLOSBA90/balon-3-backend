@@ -21,7 +21,7 @@ export const checkServerStatus = async () => {
 
     } catch (error:any) {
         console.error("Error checking server status: ",error.message);
-    }
+    } 
 }
   
 //Experimental

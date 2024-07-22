@@ -1,8 +1,6 @@
 import { Op } from 'sequelize';
 import { Card } from '../models/card.model';
 import { Fixture } from '../models/fixture.model';
-import moment from 'moment';
-import { parseToDate } from '../core/utils/dates';
 
 export class CardService {
  static async getHomeContent(date: Date, limit: number, offset: number) {

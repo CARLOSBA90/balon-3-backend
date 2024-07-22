@@ -19,7 +19,7 @@ const server_service_1 = require("../services/server.service");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
-        this.port = process.env.PORT || '3000';
+        this.port = process.env.PORT || '4500';
         this.middlewares();
         this.routes();
         this.startServer();
@@ -30,8 +30,7 @@ class Server {
         });
     }
     routes() {
-        this.app.use('/api/v1/cards', card_router_1.default);
-        //  this.app.use('/api/v1/users', routesUser);
+        this.app.use('/v1/cards', card_router_1.default);
     }
     middlewares() {
         // PARSING BODY

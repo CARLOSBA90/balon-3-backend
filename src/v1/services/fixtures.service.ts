@@ -16,8 +16,8 @@ export const checkFixturesData = async () => {
     
     if (count === 0 && process.env.MODE === 'PRODUCTION')
         fillFromAPI();
-}
-
+} 
+ 
 
 const fillFromJson= async () => {
     const filePath = path.resolve(__dirname, '../mocks/fixture.json'); 
@@ -27,7 +27,7 @@ const fillFromJson= async () => {
         const data: any = JSON.parse(jsonData); 
 
         if(data && data[0].response){
-
+ 
             const response=data[0].response;
 
             const fixtures: FixtureInterface[] = await extractFixtures(response);

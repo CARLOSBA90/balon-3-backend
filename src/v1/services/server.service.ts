@@ -17,7 +17,7 @@ export const checkServerStatus = async () => {
         await Fixture.sync();
         await Card.sync();
  
-        checkServerData();
+        checkServerData(); 
 
     } catch (error:any) {
         console.error("Error checking server status: ",error.message);

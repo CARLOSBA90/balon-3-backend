@@ -1,5 +1,3 @@
-//import { CardInterface } from "./card.interface";
-
 export interface HomeInterface {
     date: Date;
     limit: number;

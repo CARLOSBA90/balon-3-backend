@@ -21,6 +21,9 @@ exports.Fixture = connection_1.default.define('fixture', {
     date: {
         type: sequelize_1.DataTypes.DATE
     },
+    date_formatted: {
+        type: sequelize_1.DataTypes.STRING(20)
+    },
     homeIdTeam: {
         type: sequelize_1.DataTypes.INTEGER,
         references: {

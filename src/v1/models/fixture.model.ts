@@ -17,6 +17,9 @@ export const Fixture = sequelize.define('fixture',{
      date:{
         type: DataTypes.DATE
      },
+     date_formatted:{
+      type: DataTypes.STRING(20)
+     },
      homeIdTeam:{
         type: DataTypes.INTEGER,
         references: {

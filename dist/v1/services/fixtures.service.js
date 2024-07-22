@@ -59,7 +59,6 @@ const fillFromJson = () => __awaiter(void 0, void 0, void 0, function* () {
         if (data && data[0].response) {
             const response = data[0].response;
             const fixtures = yield extractFixtures(response);
-            // insertFixtures(fixtures);
             insertCards(fixtures);
         }
     }
@@ -84,15 +83,15 @@ const extractFixtures = (response) => __awaiter(void 0, void 0, void 0, function
         venueMap.set(venue.external_id, venue.id);
     });
     const fixtures = response.map((data) => {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         const homeIdTeam = (_a = teamMap.get(data.teams.home.id)) !== null && _a !== void 0 ? _a : 0;
         const awayIdTeam = (_b = teamMap.get(data.teams.away.id)) !== null && _b !== void 0 ? _b : 0;
         const venueId = (_c = venueMap.get(data.fixture.venue.id)) !== null && _c !== void 0 ? _c : 0;
         return {
             external_id: (_d = data.fixture.id) !== null && _d !== void 0 ? _d : 0,
-            // Convierte la fecha a UTC antes de guardarla(Solo para este caso en especifico)
-            // El JSON viene en formato (UTC-3), casting a UTC // despues borrar esto
-            date: (_e = (0, moment_timezone_1.default)(data.fixture.date).utc().format('YYYY-MM-DD HH:mm:ss')) !== null && _e !== void 0 ? _e : '',
+            // date: moment(data.fixture.date).utc().format('YYYY-MM-DD HH:mm:ss') ?? '',
+            date: (_e = (0, moment_timezone_1.default)(data.fixture.date).format('YYYY-MM-DD HH:mm:ss')) !== null && _e !== void 0 ? _e : '',
+            date_formatted: (_f = (0, moment_timezone_1.default)(data.fixture.date).format('DD-MM-YYYY')) !== null && _f !== void 0 ? _f : '',
             homeIdTeam,
             awayIdTeam,
             venueId
@@ -111,18 +110,17 @@ const insertFixtures = (fixtures) => __awaiter(void 0, void 0, void 0, function*
 });
 const insertCards = (fixtures) => __awaiter(void 0, void 0, void 0, function* () {
     for (const data of fixtures) {
+        //    console.log(data);
         try {
-            const { external_id, date, homeIdTeam, awayIdTeam, venueId } = data;
-            let fixture = yield fixture_model_1.Fixture.findOne({ where: { external_id } });
-            if (!fixture) {
-                fixture = yield fixture_model_1.Fixture.create({
-                    external_id,
-                    date,
-                    homeIdTeam,
-                    awayIdTeam,
-                    venueId,
-                });
-            }
+            const { external_id, date, date_formatted, homeIdTeam, awayIdTeam, venueId } = data;
+            let fixture = yield fixture_model_1.Fixture.create({
+                external_id,
+                date,
+                date_formatted,
+                homeIdTeam,
+                awayIdTeam,
+                venueId,
+            });
             const homeTeam = yield team_model_1.Team.findByPk(homeIdTeam);
             const awayTeam = yield team_model_1.Team.findByPk(awayIdTeam);
             const venue = yield venue_model_1.Venue.findByPk(venueId);
@@ -138,27 +136,20 @@ const insertCards = (fixtures) => __awaiter(void 0, void 0, void 0, function* ()
                 const title = `${homeTeamName} VS ${awayTeamName}`;
                 const content = ` 
                 <div class="p-4 bg-white rounded shadow-md">
-                  <p class="text-lg font-semibold mb-2"><strong>Fecha:</strong> ${(0, moment_timezone_1.default)(date).format('YYYY-MM-DD HH:mm:ss')}</p>
-                  <p class="text-lg font-semibold mb-2"><strong>Equipos:</strong> <span class="text-blue-500">${homeTeamName}</span> VS <span class="text-red-500">${awayTeamName}</span></p>
-                  <p class="text-lg font-semibold mb-2"><strong>Estadio:</strong> ${venueName}, ${venueCity}</p>
+                  <p class="mt-1 text-gray-500 text-sm"><b>FECHA</b> ${(0, moment_timezone_1.default)(date).format('YYYY-MM-DD HH:mm')}</p>
+                  <p class="text-indigo-500 text-sm inline-flex items-center mt-4 mb-4"> ${venueName}, ${venueCity}</p>
                   <div class="flex justify-between items-center mb-4">
-                    <div class="w-1/3 text-center">
-                      <p class="text-lg font-semibold mb-2">Locales</p>
+                    <div class="w-1/2 text-center">
+                      <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">EQUIPO LOCAL</h2>
                       <img src="${homeLogo}" alt="${homeTeamName} logo" class="w-24 h-24 mx-auto rounded-full shadow-md">
                     </div> 
-                    <div class="w-1/3 text-center">
-                      <p class="text-lg font-semibold mb-2">Visitantes</p>
+                    <div class="w-1/2 text-center">
+                      <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">EQUIPO VISITANTE</h2>
                       <img src="${awayLogo}" alt="${awayTeamName} logo" class="w-24 h-24 mx-auto rounded-full shadow-md">
-                    </div>
-                    <div class="w-1/3 text-center">
-                      <p class="text-lg font-semibold mb-2">Estadio</p>
-                      <img src="${venueImage}" alt="${venueName}" class="w-24 h-24 mx-auto rounded-full shadow-md">
                     </div>
                   </div>
                 </div>
               `;
-                //const imageUrls = [venueImage, homeLogo, awayLogo];
-                //const imageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
                 const imageUrl = venueImage;
                 yield card_model_1.Card.create({
                     title,
@@ -170,11 +161,8 @@ const insertCards = (fixtures) => __awaiter(void 0, void 0, void 0, function* ()
                     fixtureId: fixtureId
                 });
             }
-            else {
-                ///T0D0 
-                // SAVE LOG, WHEN CARD WAS NOT CREATED
-                console.error("Unable to complete data");
-            }
+            else
+                throw new Error("Unable to complete data");
         }
         catch (error) {
             //T0D0

@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCards = void 0;
+exports.getCardData = exports.getHomeData = void 0;
 const validators_1 = require("../core/utils/validators");
 const dates_1 = require("../core/utils/dates");
 const cards_service_1 = require("../services/cards.service");
-const getCards = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getHomeData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //today(true),
     try {
         let data = {
@@ -39,4 +39,20 @@ const getCards = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).json({ error: 'No es posible consultar los datos' });
     }
 });
-exports.getCards = getCards;
+exports.getHomeData = getHomeData;
+const getCardData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let id = 0;
+        if ((0, validators_1.isNumeric)(req.params.number))
+            id = (0, validators_1.parseToInt)(req.params.number);
+        if (!id)
+            throw new Error("Sin ID para consultar");
+        const { card, gallery } = yield cards_service_1.CardService.getCardContent(id);
+        res.json({ card: card, gallery: gallery });
+    }
+    catch (error) {
+        console.error('Error fetching cards:', error);
+        res.status(500).json({ error: 'No es posible consultar los datos' });
+    }
+});
+exports.getCardData = getCardData;

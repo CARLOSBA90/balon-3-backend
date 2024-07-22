@@ -8,15 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardService = void 0;
 const sequelize_1 = require("sequelize");
 const card_model_1 = require("../models/card.model");
 const fixture_model_1 = require("../models/fixture.model");
-const moment_1 = __importDefault(require("moment"));
 class CardService {
     static getHomeContent(date, limit, offset) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -35,7 +31,7 @@ class CardService {
                     ]
                 });
                 // Obtener los registros paginados
-                const data = yield card_model_1.Card.findAll({
+                const cards = yield card_model_1.Card.findAll({
                     attributes: ['id', 'title', 'imageUrl'],
                     include: [
                         {
@@ -45,25 +41,61 @@ class CardService {
                                     [sequelize_1.Op.gte]: date // Usar la fecha proporcionada
                                 }
                             },
-                            order: [
-                                ['date', 'ASC']
-                            ],
-                            attributes: ['date'],
+                            attributes: ['date_formatted'],
                         }
                     ],
                     limit: limit,
-                    offset: offset
-                });
-                const cards = data.map(card => {
-                    const fixture = card.get('fixture');
-                    const fixtureDate = fixture ? fixture.date : null;
-                    console.log(fixtureDate);
-                    const formattedDate = fixtureDate ? (0, moment_1.default)(fixtureDate).format('DD-MM-YYYY') : null;
-                    console.log(formattedDate);
-                    return Object.assign(Object.assign({}, card.get({ plain: true })), { fixtureDate: formattedDate // Agregar la fecha formateada
-                     });
+                    offset: offset,
+                    order: [
+                        [fixture_model_1.Fixture, 'date', 'ASC'] // Ordenar por fecha ascendente
+                    ]
                 });
                 return { cards, total };
+            }
+            catch (error) {
+                console.error('Error fetching cards:', error);
+                throw new Error('Error fetching cards');
+            }
+        });
+    }
+    static getCardContent(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const card = yield card_model_1.Card.findByPk(id);
+                if (!card)
+                    throw new Error('Card not found');
+                const fixtureId = card.get('fixtureId');
+                const fixture = yield fixture_model_1.Fixture.findByPk(fixtureId);
+                if (!fixture)
+                    throw new Error('Fixture not found');
+                let homeIdTeam = fixture.get('homeIdTeam');
+                let awayIdTeam = fixture.get('awayIdTeam');
+                const teamIds = new Set([homeIdTeam, awayIdTeam]);
+                const gallery = yield card_model_1.Card.findAll({
+                    attributes: ['id', 'title', 'imageUrl'],
+                    include: [
+                        {
+                            model: fixture_model_1.Fixture,
+                            where: {
+                                [sequelize_1.Op.or]: [
+                                    { homeIdTeam: { [sequelize_1.Op.in]: Array.from(teamIds) } },
+                                    { awayIdTeam: { [sequelize_1.Op.in]: Array.from(teamIds) } }
+                                ],
+                                [sequelize_1.Op.and]: [
+                                    {
+                                        id: { [sequelize_1.Op.not]: fixtureId }
+                                    }
+                                ],
+                            },
+                            attributes: ['date_formatted'],
+                        }
+                    ],
+                    order: [
+                        [fixture_model_1.Fixture, 'date', 'ASC']
+                    ],
+                    limit: 5
+                });
+                return { card, gallery };
             }
             catch (error) {
                 console.error('Error fetching cards:', error);

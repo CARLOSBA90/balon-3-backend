@@ -2,9 +2,10 @@ import { Op } from 'sequelize';
 import { Card } from '../models/card.model';
 import { Fixture } from '../models/fixture.model';
 import moment from 'moment';
+import { parseToDate } from '../core/utils/dates';
 
 export class CardService {
-  static async getHomeContent(date: Date, limit: number, offset: number) {
+ static async getHomeContent(date: Date, limit: number, offset: number) {
     try {
       // Obtener el total de registros que cumplen con la condición
       const total = await Card.count({
@@ -21,7 +22,7 @@ export class CardService {
       });
 
       // Obtener los registros paginados
-      const data = await Card.findAll({
+      const cards = await Card.findAll({
         attributes: ['id','title', 'imageUrl'], 
         include: [
           {
@@ -31,35 +32,72 @@ export class CardService {
                 [Op.gte]: date // Usar la fecha proporcionada
               }
             },
-            order: [
-              ['date', 'ASC']
-            ],
-            attributes: ['date'], 
+            attributes: ['date_formatted'],  
           }
         ],
         limit: limit,
-        offset: offset
+        offset: offset,
+        order: [
+          [Fixture, 'date', 'ASC'] // Ordenar por fecha ascendente
+        ]
       });
 
-      const cards = data.map(card => {
-        const fixture = card.get('fixture') as any;
-        const fixtureDate = fixture ? fixture.date : null;
-        console.log(fixtureDate);
+     return { cards , total };
+    } catch (error) {
+      console.error('Error fetching cards:', error);
+      throw new Error('Error fetching cards');
+    }
+  }
 
-        const formattedDate = fixtureDate ? moment(fixtureDate).format('DD-MM-YYYY') : null;
-        console.log(formattedDate);
-        return {
-          ...card.get({ plain: true }), // Obtener los datos planos del card
-          fixtureDate: formattedDate // Agregar la fecha formateada
-        };
+
+  static async getCardContent(id: number) {
+    try {
+        const card = await Card.findByPk(id);
+    
+        if(!card)
+          throw new Error('Card not found');
+
+      const fixtureId = card.get('fixtureId') as number;
+      const fixture = await Fixture.findByPk(fixtureId);
+
+        if (!fixture) 
+          throw new Error('Fixture not found');
+    
+      let homeIdTeam = fixture.get('homeIdTeam') as number;
+      let awayIdTeam = fixture.get('awayIdTeam') as number;
+
+      const teamIds = new Set<number>([homeIdTeam, awayIdTeam]);
+
+      const gallery = await Card.findAll({
+        attributes: ['id', 'title', 'imageUrl'],
+        include: [
+          {
+            model: Fixture,
+            where: {
+              [Op.or]: [
+                { homeIdTeam: { [Op.in]: Array.from(teamIds) } },
+                { awayIdTeam: { [Op.in]: Array.from(teamIds) } }
+              ],
+              [Op.and]: [
+                {
+                  id: { [Op.not]: fixtureId }
+                }
+              ],
+            },
+            attributes: ['date_formatted'],
+          }
+        ],
+        order: [
+          [Fixture, 'date', 'ASC']
+        ],
+        limit: 5 
       });
 
-      
-
-      return { cards, total };
+      return { card, gallery };
     } catch (error) {
       console.error('Error fetching cards:', error);
       throw new Error('Error fetching cards');
     }
   }
 }
+

@@ -19,7 +19,7 @@ const server_service_1 = require("../services/server.service");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
-        this.port = process.env.PORT || '4500';
+        this.port = process.env.PORT || '4501';
         this.middlewares();
         this.routes();
         this.startServer();

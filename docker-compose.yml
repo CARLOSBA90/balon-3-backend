@@ -1,0 +1,11 @@
+services:
+  backend:
+    build: .
+    container_name: balon3-backend
+    restart: unless-stopped
+    ports:
+      - "4501:4501"
+    env_file:
+      - .env
+    environment:
+      - PORT=4501
